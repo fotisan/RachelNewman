@@ -10,6 +10,7 @@
   --soft: rgba(63, 78, 79, 0.05);
   --line: rgba(63, 78, 79, 0.12);
 
+  /* ΤΟ ΒΑΣΙΚΟ ΧΡΩΜΑ ΠΟΥ ΘΑ ΧΡΗΣΙΜΟΠΟΙΗΘΕΙ ΓΙΑ ΤΟ ΦΙΛΤΡΟ */
   --accent: #7c9473;   /* Sage Green - Calm & Professional */
   --accent2: #cfb997;  /* Warm Sand */
 
@@ -139,13 +140,68 @@ a{ color: inherit; text-decoration: none; }
 .trust-pill{ display:flex; align-items:center; gap: 8px; font-size: 13px; color: var(--muted); font-weight: 500; }
 .trust-icon{ color: var(--accent); font-size: 16px; }
 
-/* Hero Card */
+/* Hero Card & Images */
 .hero-card{
   border-radius: var(--radius2); overflow:hidden; border: 1px solid var(--line);
   background: #fff; box-shadow: var(--shadow); position: relative;
 }
-.hero-image-wrap{ border-bottom: 1px solid var(--line); background: #f0f0f0; }
-.hero-image{ width:100%; height:100%; object-fit: cover; aspect-ratio: 4 / 3; }
+
+/* --- ΝΕΟΣ ΚΩΔΙΚΑΣ ΓΙΑ ΕΙΚΟΝΕΣ ΚΑΙ ΦΙΛΤΡΑ --- */
+
+/* 1. Ρύθμιση Διαστάσεων Hero Εικόνας */
+.hero-image-wrap{
+    border-bottom: 1px solid var(--line);
+    background: #f0f0f0;
+    position: relative; /* Απαραίτητο για το φίλτρο */
+    overflow: hidden;
+}
+/* Αφαιρέθηκε το aspect-ratio και το height:100% για να πάρει τις φυσικές διαστάσεις */
+.hero-image{
+    width:100%;
+    height: auto;
+    display: block;
+}
+
+/* 2. Εφαρμογή Φίλτρου σε Hero και Gallery */
+
+/* Δημιουργία του "φίλτρου" ως ένα layer πάνω από την εικόνα */
+.hero-image-wrap::after,
+.gallery-tile::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    /* Χρήση του βασικού πράσινου χρώματος του theme */
+    background: var(--accent);
+    /* Πόσο έντονο είναι το φίλτρο (0.2 = 20% αδιαφάνεια) */
+    opacity: 0.2;
+    /* Το κλειδί: Multiply blend mode για φυσική ενσωμάτωση */
+    mix-blend-mode: multiply;
+    pointer-events: none; /* Τα κλικ περνάνε από κάτω */
+    z-index: 1;
+    transition: opacity 0.4s ease;
+}
+
+/* Ελαφρύ "άνοιγμα" του φίλτρου όταν περνάει το ποντίκι */
+.hero-card:hover .hero-image-wrap::after,
+.gallery-tile:hover::after {
+    opacity: 0.05;
+}
+
+/* Πρόσθετα μικρο-φίλτρα στην ίδια την εικόνα για πιο μαλακό αποτέλεσμα */
+.hero-image,
+.gallery-tile img {
+   /* Λίγο sepia για ζεστασιά, ελάχιστα μειωμένη αντίθεση */
+   filter: sepia(0.1) contrast(0.96) brightness(0.98);
+   transition: filter 0.4s ease;
+}
+.hero-card:hover .hero-image,
+.gallery-tile:hover img {
+    /* Επαναφορά στο hover */
+    filter: sepia(0) contrast(1) brightness(1);
+}
+
+/* --- ΤΕΛΟΣ ΝΕΟΥ ΚΩΔΙΚΑ ΕΙΚΟΝΩΝ --- */
+
 .hero-card-body{ padding: 24px; }
 .card-title{ margin: 0 0 8px; font-size: 18px; font-family: var(--serif); }
 .card-text{ margin: 0 0 0; line-height: 1.7; color: var(--muted); font-size: 14px; }
@@ -213,13 +269,14 @@ a{ color: inherit; text-decoration: none; }
 .info-k{ margin: 0; font-size: 13px; color: var(--muted); }
 .info-v{ margin: 0; font-weight: 600; font-size: 13px; text-align: right; }
 
-/* Gallery Grid */
+/* Gallery Grid - Updated for filters */
 .gallery-grid{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .gallery-tile{
   border-radius: var(--radius2); overflow: hidden; border: 1px solid var(--line);
   background: #fff; aspect-ratio: 4/3;
+  position: relative; /* Απαραίτητο για το φίλτρο */
 }
-.gallery-tile img{ width: 100%; height: 100%; object-fit: cover; }
+.gallery-tile img{ width: 100%; height: 100%; object-fit: cover; display:block;}
 
 /* Services Cards */
 .cards{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
